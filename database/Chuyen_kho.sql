@@ -1,4 +1,4 @@
-﻿CREATE PROC sp_ChuyenKho
+﻿CREATE OR ALTER PROC sp_ChuyenKho
     @MaPCK VARCHAR(10),
     @MaKhoNguon VARCHAR(10),
     @MaKhoDich VARCHAR(10),
@@ -7,6 +7,20 @@
     @NguoiLap VARCHAR(10)
 AS
 BEGIN
+	
+	IF (@SoLuongChuyen <= 0)
+    BEGIN
+        PRINT N'Lỗi: Số lượng chuyển phải lớn hơn 0!';
+        RETURN;
+    END
+
+    IF (@MaKhoNguon = @MaKhoDich)
+    BEGIN
+        PRINT N'Lỗi: Kho nguồn và kho đích không được trùng nhau!';
+        RETURN;
+    END
+
+
     DECLARE @TonKhoNguon DECIMAL(18,2);
     
     BEGIN TRANSACTION;
