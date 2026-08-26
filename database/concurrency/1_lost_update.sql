@@ -1,19 +1,19 @@
 USE QuanLyVatTuXayDung;
 GO
 
--- C�ch ch?y:
--- L?u �: Kh�ng ch?y to�n b? file c�ng l�c.
--- 1. Reset d? li?u v? 465.00 tr??c khi ch?y: UPDATE TON_KHO SET SoLuongTon = 465.00 WHERE MaKho = 'KHO01' AND MaVT = 'VT01';
--- 2. M? 2 tab Query trong SSMS.
--- 3. Ch?y Tab 1 tr??c, sau ?� chuy?n sang Tab 2 b?m ch?y ngay l?p t?c.
--- 4. Ki?m tra s? t?n: SELECT MaKho, MaVT, SoLuongTon FROM TON_KHO WHERE MaKho = 'KHO01' AND MaVT = 'VT01';
+-- Cách chạy:
+-- Lưu ý: Không chạy toàn bộ file cùng lúc.
+-- 1. Reset dữ liệu về 465.00 trước khi chạy: UPDATE TON_KHO SET SoLuongTon = 465.00 WHERE MaKho = 'KHO01' AND MaVT = 'VT01';
+-- 2. Mở 2 tab Query trong SSMS.
+-- 3. Chạy Tab 1 trước, sau đó chuyển sang Tab 2 bấm chạy ngay lập tức.
+-- 4. Kiểm tra số tồn: SELECT MaKho, MaVT, SoLuongTon FROM TON_KHO WHERE MaKho = 'KHO01' AND MaVT = 'VT01';
 
 
 -- ==========================================
--- PH?N 1: M� PH?NG L?I LOST UPDATE
+-- PHẦN 1: MÔ PHỎNG LỖI LOST UPDATE
 -- ==========================================
 
--- Tab 1: SESSION 1 (Xu?t 15 c�y - Gi? tr? 8 gi�y)
+-- Tab 1: SESSION 1 (Xuất 15 cây - Giữ trễ 8 giây)
 BEGIN TRANSACTION;
     DECLARE @ton DECIMAL(18,2);
     SELECT @ton = SoLuongTon 
@@ -26,10 +26,10 @@ BEGIN TRANSACTION;
     SET SoLuongTon = @ton - 15 
     WHERE MaKho = 'KHO01' AND MaVT = 'VT01';
 COMMIT TRANSACTION;
-PRINT N'Session 1 (L?i) ho�n t?t!';
+PRINT N'Session 1 (Lỗi) hoàn tất!';
 
 
--- Tab 2: SESSION 2 (Nh?p 50 c�y - Ch?y ?� l�n Session 1)
+-- Tab 2: SESSION 2 (Nhập 50 cây - Chạy đè lên Session 1)
 BEGIN TRANSACTION;
     DECLARE @ton DECIMAL(18,2);
     SELECT @ton = SoLuongTon 
@@ -40,14 +40,14 @@ BEGIN TRANSACTION;
     SET SoLuongTon = @ton + 50 
     WHERE MaKho = 'KHO01' AND MaVT = 'VT01';
 COMMIT TRANSACTION;
-PRINT N'Session 2 (L?i) ho�n t?t!';
+PRINT N'Session 2 (Lỗi) hoàn tất!';
 
 
 -- ==========================================
--- PH?N 2: KH?C PH?C L?I B?NG UPDLOCK
+-- PHẦN 2: KHẮC PHỤC LỖI BẰNG UPDLOCK
 -- ==========================================
 
--- Tab 1: SESSION 1 (Kh�a c?p nh?t UPDLOCK)
+-- Tab 1: SESSION 1 (Khóa cập nhật UPDLOCK)
 BEGIN TRANSACTION;
     DECLARE @ton DECIMAL(18,2);
     SELECT @ton = SoLuongTon 
@@ -60,10 +60,10 @@ BEGIN TRANSACTION;
     SET SoLuongTon = @ton - 15 
     WHERE MaKho = 'KHO01' AND MaVT = 'VT01';
 COMMIT TRANSACTION;
-PRINT N'Session 1 (UPDLOCK) ho�n t?t!';
+PRINT N'Session 1 (UPDLOCK) hoàn tất!';
 
 
--- Tab 2: SESSION 2 (B? ch?n ch? Session 1 ho�n t?t)
+-- Tab 2: SESSION 2 (Bị chặn chờ Session 1 hoàn tất)
 BEGIN TRANSACTION;
     DECLARE @ton DECIMAL(18,2);
     SELECT @ton = SoLuongTon 
@@ -74,4 +74,4 @@ BEGIN TRANSACTION;
     SET SoLuongTon = @ton + 50 
     WHERE MaKho = 'KHO01' AND MaVT = 'VT01';
 COMMIT TRANSACTION;
-PRINT N'Session 2 (UPDLOCK) ho�n t?t!';
+PRINT N'Session 2 (UPDLOCK) hoàn tất!';
