@@ -1,7 +1,7 @@
 USE QuanLyVatTuXayDung;
 GO
 
--- Trigger ch?n x�a v?t t? n?u v?n c�n t?n kho
+-- Trigger chặn xóa vật tư nếu vẫn còn tồn kho
 CREATE OR ALTER TRIGGER trg_VatTu_NgauXoa
 ON VAT_TU
 INSTEAD OF DELETE
@@ -9,7 +9,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    -- Ki?m tra n?u v?t t? y�u c?u x�a v?n c�n s? l??ng t?n > 0 t?i b?t k? kho n�o
+    -- Kiểm tra nếu vật tư yêu cầu xóa vẫn còn số lượng tồn > 0 tại bất kỳ kho nào
     IF EXISTS (
         SELECT 1 
         FROM TON_KHO tk
@@ -17,16 +17,16 @@ BEGIN
         WHERE tk.SoLuongTon > 0
     )
     BEGIN
-        RAISERROR (N'L?i nghi?p v?: Kh�ng th? x�a v?t t? v� v?n c�n s? l??ng t?n trong kho!', 16, 1);
+        RAISERROR (N'Lỗi nghiệp vụ: Không thể xóa vật tư vì vẫn còn số lượng tồn trong kho!', 16, 1);
         ROLLBACK TRANSACTION;
         RETURN;
     END;
 
-    -- N?u t?n kho b?ng 0 th� cho ph�p x�a m?m (chuy?n tr?ng th�i sang ng?ng ho?t ??ng)
+    -- Nếu tồn kho bằng 0 thì cho phép xóa mềm (chuyển trạng thái sang ngừng hoạt động)
     UPDATE VAT_TU
     SET TrangThai = 0
     WHERE MaVT IN (SELECT MaVT FROM deleted);
 
-    PRINT N'?� c?p nh?t tr?ng th�i v?t t? sang ng?ng ho?t ??ng th�nh c�ng.';
+    PRINT N'Đã cập nhật trạng thái vật tư sang ngừng hoạt động thành công.';
 END;
 GO
