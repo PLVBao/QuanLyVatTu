@@ -73,3 +73,32 @@ from VAT_TU vt
 left join TON_KHO tk on vt.MaVT = tk.MaVT
 group by vt.MaVT, vt.TenVT, vt.DonViTinh;
 go
+
+-- 5. Báo cáo đối chiếu Tồn kho thực tế và Lịch sử Nhập/Xuất
+SELECT 
+    MaVT,
+    TenVT,
+    DonViTinh,
+    TongDaNhap,
+    TongDaXuat,
+    (TongDaNhap - TongDaXuat) AS TonLyThuyet,
+    TongTonHienTai AS TonThucTe,
+    (TongTonHienTai - (TongDaNhap - TongDaXuat)) AS DoChenhLechDieuChinh
+FROM 
+    vw_TongHopNhapXuatTon
+WHERE 
+    TongTonHienTai <> (TongDaNhap - TongDaXuat);
+GO
+    
+-- 6. Báo cáo Tổng giá trị tồn kho ước tính theo giá nhập gần nhất
+SELECT 
+    v.MaVT,
+    v.TenVT,
+    v.TongTonHienTai,
+    (SELECT TOP 1 DonGia FROM CT_PHIEU_NHAP ctn JOIN PHIEU_NHAP pn ON ctn.MaPN = pn.MaPN WHERE ctn.MaVT = v.MaVT ORDER BY pn.NgayNhap DESC) AS GiaNhapGanNhat,
+    (v.TongTonHienTai * (SELECT TOP 1 DonGia FROM CT_PHIEU_NHAP ctn JOIN PHIEU_NHAP pn ON ctn.MaPN = pn.MaPN WHERE ctn.MaVT = v.MaVT ORDER BY pn.NgayNhap DESC)) AS TongGiaTriUocTinh
+FROM 
+    vw_TongHopNhapXuatTon v
+WHERE 
+    v.TongTonHienTai > 0;
+GO
