@@ -1,3 +1,6 @@
+USE QuanLyVatTuXayDung;
+GO
+
 CREATE OR ALTER PROCEDURE sp_ChuyenKho
     @MaPCK VARCHAR(10),
     @MaKhoNguon VARCHAR(10),
@@ -113,3 +116,4 @@ BEGIN
         RAISERROR(@ErrorMessage, 16, 1);
     END CATCH
 END;
+GO
