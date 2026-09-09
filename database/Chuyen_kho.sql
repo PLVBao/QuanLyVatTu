@@ -1,4 +1,4 @@
-CREAT OR ALTER   PROCEDURE sp_ChuyenKho
+CREATE OR ALTER PROCEDURE sp_ChuyenKho
     @MaPCK VARCHAR(10),
     @MaKhoNguon VARCHAR(10),
     @MaKhoDich VARCHAR(10),
@@ -10,41 +10,48 @@ BEGIN
     SET NOCOUNT ON;
 
     BEGIN TRY
-        -- Kiểm tra điều kiện số lượng
+        -- 1. Kiểm tra số lượng chuyển
         IF @SoLuongChuyen <= 0
         BEGIN
             RAISERROR(N'Lỗi: Số lượng chuyển phải lớn hơn 0!', 16, 1);
             RETURN;
         END
 
-        -- Kiểm tra kho nguồn và kho đích
+        -- 2. Kiểm tra kho nguồn và kho đích
         IF @MaKhoNguon = @MaKhoDich
         BEGIN
             RAISERROR(N'Lỗi: Kho nguồn và kho đích không được trùng nhau!', 16, 1);
             RETURN;
         END
 
-        -- Kiểm tra kho tồn tại
-        IF NOT EXISTS (SELECT 1 FROM KHO WHERE MaKho = @MaKhoNguon)
+        -- 3. Kiểm tra kho tồn tại và đang hoạt động
+        IF NOT EXISTS (SELECT 1 FROM KHO WHERE MaKho = @MaKhoNguon AND TrangThai = 1)
         BEGIN
-            RAISERROR(N'Lỗi: Kho nguồn không tồn tại!', 16, 1);
+            RAISERROR(N'Lỗi: Kho nguồn không tồn tại hoặc đã ngừng hoạt động!', 16, 1);
             RETURN;
         END
 
-        IF NOT EXISTS (SELECT 1 FROM KHO WHERE MaKho = @MaKhoDich)
+        IF NOT EXISTS (SELECT 1 FROM KHO WHERE MaKho = @MaKhoDich AND TrangThai = 1)
         BEGIN
-            RAISERROR(N'Lỗi: Kho đích không tồn tại!', 16, 1);
+            RAISERROR(N'Lỗi: Kho đích không tồn tại hoặc đã ngừng hoạt động!', 16, 1);
             RETURN;
         END
 
-        -- Kiểm tra vật tư tồn tại
-        IF NOT EXISTS (SELECT 1 FROM VAT_TU WHERE MaVT = @MaVT)
+        -- 4. Kiểm tra vật tư tồn tại và đang hoạt động
+        IF NOT EXISTS (SELECT 1 FROM VAT_TU WHERE MaVT = @MaVT AND TrangThai = 1)
         BEGIN
-            RAISERROR(N'Lỗi: Vật tư không tồn tại!', 16, 1);
+            RAISERROR(N'Lỗi: Vật tư không tồn tại hoặc đã ngừng sử dụng!', 16, 1);
             RETURN;
         END
 
-        -- Kiểm tra mã phiếu chuyển đã tồn tại
+        -- 5. Kiểm tra người lập
+        IF NOT EXISTS (SELECT 1 FROM TAI_KHOAN WHERE MaTK = @NguoiLap AND TrangThai = 1)
+        BEGIN
+            RAISERROR(N'Lỗi: Tài khoản người lập không tồn tại hoặc bị khóa!', 16, 1);
+            RETURN;
+        END
+
+        -- 6. Kiểm tra mã phiếu trùng lặp
         IF EXISTS (SELECT 1 FROM PHIEU_CHUYEN_KHO WHERE MaPCK = @MaPCK)
         BEGIN
             RAISERROR(N'Lỗi: Mã phiếu chuyển kho đã tồn tại!', 16, 1);
@@ -56,32 +63,32 @@ BEGIN
         -- Bắt đầu giao tác
         BEGIN TRANSACTION;
 
-        -- Kiểm tra tồn kho nguồn
+        -- Khóa cập nhật (UPDLOCK) trên kho nguồn để đảm bảo toàn vẹn
         SELECT @TonKhoNguon = SoLuongTon
-        FROM TON_KHO
+        FROM TON_KHO WITH (UPDLOCK)
         WHERE MaKho = @MaKhoNguon AND MaVT = @MaVT;
 
         IF @TonKhoNguon IS NULL OR @TonKhoNguon < @SoLuongChuyen
         BEGIN
-            RAISERROR(N'Lỗi: Số lượng tồn ở kho nguồn không đủ hoặc không tồn tại!', 16, 1);
+            RAISERROR(N'Lỗi: Số lượng tồn ở kho nguồn không đủ hoặc vật tư chưa có trong kho!', 16, 1);
             ROLLBACK TRANSACTION;
             RETURN;
         END
 
-        -- 1. Insert phiếu chuyển kho
+        -- Thêm thông tin phiếu chuyển
         INSERT INTO PHIEU_CHUYEN_KHO (MaPCK, MaKhoNguon, MaKhoDich, NgayChuyen, NguoiLap, TrangThai)
-        VALUES (@MaPCK, @MaKhoNguon, @MaKhoDich, GETDATE(), @NguoiLap, N'HOAN_THANH');
+        VALUES (@MaPCK, @MaKhoNguon, @MaKhoDich, GETDATE(), @NguoiLap, 'HOAN_THANH');
 
-        -- 2. Insert chi tiết chuyển kho
+        -- Thêm chi tiết chuyển kho
         INSERT INTO CT_CHUYEN_KHO (MaPCK, MaVT, SoLuong)
         VALUES (@MaPCK, @MaVT, @SoLuongChuyen);
 
-        -- 3. Trừ tồn kho nguồn
+        -- Trừ tồn kho nguồn
         UPDATE TON_KHO
         SET SoLuongTon = SoLuongTon - @SoLuongChuyen
         WHERE MaKho = @MaKhoNguon AND MaVT = @MaVT;
 
-        -- 4. Cộng tồn kho đích
+        -- Cộng tồn kho đích (tạo mới nếu kho đích chưa từng có mặt hàng này)
         IF EXISTS (SELECT 1 FROM TON_KHO WHERE MaKho = @MaKhoDich AND MaVT = @MaVT)
         BEGIN
             UPDATE TON_KHO
@@ -94,19 +101,15 @@ BEGIN
             VALUES (@MaKhoDich, @MaVT, @SoLuongChuyen);
         END
 
-        -- Commit giao tác
         COMMIT TRANSACTION;
         PRINT N'Chuyển kho thành công!';
 
     END TRY
-
     BEGIN CATCH
         IF @@TRANCOUNT > 0
             ROLLBACK TRANSACTION;
 
-        DECLARE @ErrorMessage NVARCHAR(4000);
-        SET @ErrorMessage = ERROR_MESSAGE();
-
+        DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
         RAISERROR(@ErrorMessage, 16, 1);
     END CATCH
 END;
