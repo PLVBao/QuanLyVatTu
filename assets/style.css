@@ -1,0 +1,519 @@
+/* ==========================================================================
+   ENTERPRISE ERP DESIGN SYSTEM (SAP/ODOO MODERN MINIMALIST STYLE)
+   ========================================================================== */
+
+/* 1. Global Typography & Colors */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+html, body, [class*="css"], [class*="st-"] {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+/* Ẩn bớt thanh điều khiển mặc định của Streamlit */
+#MainMenu { visibility: hidden !important; }
+footer { visibility: hidden !important; }
+header { visibility: hidden !important; }
+
+/* Ẩn hoàn toàn header sidebar, nút collapse và chuỗi text keyboard_double_... */
+[data-testid="stSidebarHeader"],
+[data-testid="stSidebarHeader"] *,
+[data-testid="stSidebarCollapseButton"],
+[data-testid="stSidebarCollapsedControl"],
+[data-testid="collapsedControl"],
+button[data-testid="stSidebarCollapseButton"],
+button[data-testid="baseButton-headerNoPadding"],
+[data-testid="stSidebarHeader"] button,
+header[data-testid="stHeader"] button {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Nền toàn trang: Xám khói công sở sáng (#F8FAFC) */
+.stApp {
+    background-color: #F8FAFC !important;
+}
+
+/* 2. Thanh điều hướng Sidebar */
+[data-testid="stSidebar"] {
+    background-color: #FFFFFF !important;
+    border-right: 1px solid #E2E8F0 !important;
+    padding-top: 1rem !important;
+}
+
+[data-testid="stSidebar"] hr {
+    margin: 16px 0 !important;
+    border-color: #F1F5F9 !important;
+}
+
+/* Nút Đăng xuất ở Sidebar: Outlined mỏng thanh lịch */
+[data-testid="stSidebar"] div.stButton > button {
+    background-color: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    color: #DC2626 !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    font-size: 13.5px !important;
+    height: 38px !important;
+    box-shadow: none !important;
+    transition: all 0.2s ease-in-out !important;
+    width: 100% !important;
+}
+
+[data-testid="stSidebar"] div.stButton > button:hover {
+    background-color: #FEF2F2 !important;
+    border-color: #FECACA !important;
+    color: #B91C1C !important;
+    box-shadow: 0 1px 2px 0 rgba(220, 38, 38, 0.05) !important;
+}
+
+[data-testid="stSidebar"] div.stButton > button:hover * {
+    color: #B91C1C !important;
+}
+
+/* Card hồ sơ người dùng trên Sidebar */
+.user-profile-card,
+.user-card {
+    background-color: #0F172A;
+    color: #F8FAFC;
+    padding: 14px 16px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    border: 1px solid #1E293B;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+.user-profile-name,
+.user-card-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.user-profile-meta,
+.user-card-meta {
+    font-size: 12px;
+    color: #94A3B8;
+    margin-top: 4px;
+}
+.user-profile-badge,
+.user-card-role {
+    display: inline-block;
+    background-color: #1E3A8A;
+    color: #DBEAFE;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    margin-top: 8px;
+    letter-spacing: 0.3px;
+}
+
+/* 3. Thẻ chỉ số KPI Hiện đại (Tailwind UI Modern Cards) */
+.kpi-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 16px 18px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+}
+.kpi-card:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+.kpi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+.kpi-label {
+    color: #64748B;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+.kpi-icon-wrap {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.kpi-icon-blue { background-color: #EFF6FF; color: #2563EB; }
+.kpi-icon-emerald { background-color: #ECFDF5; color: #059669; }
+.kpi-icon-amber { background-color: #FFFBEB; color: #D97706; }
+.kpi-icon-red { background-color: #FEF2F2; color: #DC2626; }
+.kpi-icon-indigo { background-color: #EEF2FF; color: #4F46E5; }
+
+.kpi-body {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.kpi-value {
+    color: #0F172A;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+.kpi-badge-alert {
+    background-color: #FEF2F2;
+    color: #991B1B;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    border: 1px solid #FEE2E2;
+}
+.kpi-badge-normal {
+    background-color: #F1F5F9;
+    color: #475569;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 9999px;
+}
+.kpi-badge-success {
+    background-color: #ECFDF5;
+    color: #065F46;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    border: 1px solid #D1FAE5;
+}
+
+/* Nút bấm Xem chi tiết trong thẻ KPI Cảnh báo */
+div.stButton > button[key="btn_view_alert_details"] {
+    background-color: #FEF2F2 !important;
+    border: 1px solid #FEE2E2 !important;
+    color: #DC2626 !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    height: 32px !important;
+    border-radius: 6px !important;
+    margin-top: 6px !important;
+    box-shadow: none !important;
+    transition: all 0.15s ease-in-out !important;
+}
+
+div.stButton > button[key="btn_view_alert_details"]:hover {
+    background-color: #FEE2E2 !important;
+    border-color: #FECACA !important;
+    color: #991B1B !important;
+}
+
+/* Khối Quy trình Nghiệp vụ Kho & Thông báo */
+.process-card {
+    background-color: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 16px 18px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+.process-card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0F172A;
+    margin-bottom: 12px;
+}
+.process-step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: 13.5px;
+    color: #334155;
+    line-height: 1.5;
+}
+.process-step-num {
+    background-color: #EFF6FF;
+    color: #1D4ED8;
+    font-weight: 700;
+    font-size: 12px;
+    width: 22px;
+    height: 22px;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+.alert-card-warning {
+    background-color: #FEF2F2;
+    border: 1px solid #FEE2E2;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-top: 12px;
+    color: #991B1B;
+    font-size: 13px;
+    line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04) !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+div[data-testid="stMetric"]:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07) !important;
+}
+
+div[data-testid="stMetricLabel"] {
+    font-size: 12px !important;
+    color: #64748B !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+div[data-testid="stMetricValue"] {
+    font-size: 26px !important;
+    color: #0F172A !important;
+    font-weight: 700 !important;
+    margin-top: 4px !important;
+}
+
+/* 4. Nút bấm chuẩn Enterprise (Thay thế màu đỏ mặc định) */
+button[kind="primary"],
+button[data-testid="baseButton-primary"],
+button[data-testid="stBaseButton-primary"],
+div.stButton > button[kind="primary"],
+div.stButton > button[data-testid="baseButton-primary"],
+div.stButton > button[data-testid="stBaseButton-primary"],
+.stFormSubmitButton > button,
+.stFormSubmitButton > button[kind="primary"] {
+    background-color: #1D4ED8 !important;
+    border: 1px solid #1D4ED8 !important;
+    color: #FFFFFF !important;
+    border-radius: 6px !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    height: 42px !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+button[kind="primary"]:hover,
+button[data-testid="baseButton-primary"]:hover,
+button[data-testid="stBaseButton-primary"]:hover,
+div.stButton > button[kind="primary"]:hover,
+div.stButton > button[data-testid="baseButton-primary"]:hover,
+div.stButton > button[data-testid="stBaseButton-primary"]:hover,
+.stFormSubmitButton > button:hover {
+    background-color: #1E40AF !important;
+    border-color: #1E40AF !important;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12) !important;
+}
+
+button[kind="secondary"],
+button[data-testid="baseButton-secondary"],
+button[data-testid="stBaseButton-secondary"],
+div.stButton > button[kind="secondary"],
+div.stButton > button[data-testid="baseButton-secondary"],
+div.stButton > button[data-testid="stBaseButton-secondary"] {
+    background-color: #FFFFFF !important;
+    border: 1px solid #CBD5E1 !important;
+    color: #334155 !important;
+    border-radius: 6px !important;
+    font-weight: 500 !important;
+    font-size: 13.5px !important;
+    height: 38px !important;
+    transition: all 0.15s ease-in-out !important;
+}
+
+button[kind="secondary"]:hover,
+button[data-testid="baseButton-secondary"]:hover,
+button[data-testid="stBaseButton-secondary"]:hover,
+div.stButton > button[kind="secondary"]:hover,
+div.stButton > button[data-testid="baseButton-secondary"]:hover,
+div.stButton > button[data-testid="stBaseButton-secondary"]:hover {
+    background-color: #F8FAFC !important;
+    border-color: #94A3B8 !important;
+    color: #0F172A !important;
+}
+
+/* 5. Khối nội dung, Card và Bảng dữ liệu */
+div[data-testid="stDataFrame"] {
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 6px !important;
+    background-color: #FFFFFF !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04) !important;
+    overflow: hidden !important;
+}
+
+/* Khung viền cho Containers có border */
+[data-testid="stVerticalBlockBorderWrapper"] {
+    border-radius: 8px !important;
+    border-color: #E2E8F0 !important;
+    background-color: #FFFFFF !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04) !important;
+}
+
+/* 6. Tabs điều hướng con */
+.stTabs [data-baseweb="tab-list"] {
+    gap: 4px !important;
+    border-bottom: 1px solid #E2E8F0 !important;
+    background-color: transparent !important;
+}
+
+.stTabs [data-baseweb="tab"] {
+    padding: 10px 20px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #64748B !important;
+    background-color: transparent !important;
+    border-radius: 6px 6px 0 0 !important;
+    border: none !important;
+    transition: color 0.15s ease !important;
+}
+
+.stTabs [data-baseweb="tab"]:hover {
+    color: #0F172A !important;
+}
+
+.stTabs [aria-selected="true"] {
+    background-color: #FFFFFF !important;
+    color: #1D4ED8 !important;
+    font-weight: 600 !important;
+    border-bottom: 2px solid #1D4ED8 !important;
+}
+
+/* 7. Input fields */
+div[data-baseweb="input"], div[data-baseweb="select"] {
+    border-radius: 6px !important;
+}
+
+/* 8. Hộp thông tin (Info/Warning/Error) */
+div[data-testid="stAlert"] {
+    border-radius: 6px !important;
+    border: 1px solid #E2E8F0 !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03) !important;
+}
+
+/* 9. Màn hình Đăng nhập (Enterprise Centered Card) */
+.login-wrapper {
+    max-width: 480px;
+    margin: 4vh auto 0 auto;
+}
+
+.login-header-title {
+    color: #0F172A;
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: -0.3px;
+}
+
+.login-header-sub {
+    color: #64748B;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 6px;
+    margin-bottom: 24px;
+}
+
+.login-card {
+    background-color: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 28px 32px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+}
+
+.login-demo-box {
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin-top: 16px;
+}
+
+/* 10. Khung mô phỏng 2 phiên người dùng (Dual User Simulation) */
+.dual-user-container {
+    background-color: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 16px 18px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+    margin-bottom: 12px;
+}
+.dual-user-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #F1F5F9;
+}
+.dual-user-title-s1 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1E3A8A;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.dual-user-title-s2 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0F766E;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.dual-user-role-badge-s1 {
+    background-color: #EFF6FF;
+    color: #1D4ED8;
+    border: 1px solid #DBEAFE;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+}
+.dual-user-role-badge-s2 {
+    background-color: #F0FDFA;
+    color: #0D9488;
+    border: 1px solid #CCFBF1;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+}
+.dual-user-action-box {
+    background-color: #F8FAFC;
+    border-left: 3px solid #2563EB;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    color: #334155;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+.dual-user-action-box-s2 {
+    background-color: #F8FAFC;
+    border-left: 3px solid #0D9488;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    color: #334155;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
