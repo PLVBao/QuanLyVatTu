@@ -4,101 +4,344 @@
 
 ## 1. Giới thiệu
 
-Hệ thống hỗ trợ doanh nghiệp xây dựng quản lý vật tư nội bộ trong quá trình nhập vật tư từ nhà cung cấp, lưu kho, xuất/cấp vật tư cho công trình, chuyển vật tư giữa các kho, điều chỉnh tồn sau kiểm kê và tra cứu, thống kê dữ liệu.
+Hệ thống quản lý vật tư xây dựng được xây dựng nhằm hỗ trợ doanh nghiệp quản lý toàn bộ quá trình nhập, xuất và theo dõi tồn kho vật tư nội bộ.
 
-Luồng hoạt động chính:
+Hệ thống tập trung vào các nghiệp vụ:
 
-```text
-Nhà cung cấp → Nhập kho → Theo dõi tồn kho
-→ Xuất cho công trình → Chuyển kho
-→ Điều chỉnh tồn → Tra cứu và thống kê
-```
-
-Hệ thống không phục vụ hoạt động bán vật tư cho doanh nghiệp khác.
-
-## 2. Loại ứng dụng
-
-Hệ thống được xây dựng dưới dạng ứng dụng desktop.
-
-Giao diện chương trình sử dụng PyQt6. Chương trình Python kết nối với SQL Server thông qua `pyodbc`. Các nghiệp vụ cơ sở dữ liệu được xử lý bằng T-SQL.
-
-## 3. Công nghệ dự kiến
-
-- Python
-- PyQt6
-- SQL Server
-- SQL Server Management Studio
-- T-SQL
-- pyodbc
-- Git và GitHub
-
-## 4. Chức năng dự kiến
-
-1. Đăng nhập và đăng xuất.
-2. Quản lý tài khoản người dùng.
-3. Quản lý loại vật tư.
-4. Quản lý vật tư.
-5. Quản lý nhà cung cấp.
-6. Quản lý kho.
-7. Quản lý công trình.
-8. Nhập vật tư từ nhà cung cấp vào kho.
-9. Xuất/cấp vật tư từ kho cho công trình.
-10. Chuyển vật tư giữa các kho.
-11. Điều chỉnh tồn kho sau kiểm kê.
-12. Tra cứu tồn kho theo vật tư hoặc kho.
-13. Xem lịch sử nhập, xuất, chuyển và điều chỉnh.
-14. Cảnh báo vật tư dưới mức tồn tối thiểu.
-15. Thống kê nhập – xuất – tồn theo thời gian, kho, vật tư hoặc công trình.
-16. Phân quyền cơ bản theo tài khoản nếu nhóm triển khai.
-
-## 5. Nghiệp vụ trọng tâm
-
-- Nhập vật tư vào kho.
+- Quản lý danh mục vật tư.
+- Quản lý kho.
+- Nhập vật tư từ nhà cung cấp.
 - Xuất vật tư cho công trình.
 - Chuyển vật tư giữa các kho.
-- Điều chỉnh tồn kho.
-- Theo dõi số lượng tồn.
+- Điều chỉnh tồn kho sau kiểm kê.
+- Tra cứu và thống kê dữ liệu.
+- Kiểm thử các vấn đề tương tranh trong cơ sở dữ liệu.
 
-Các nghiệp vụ làm thay đổi tồn kho phải sử dụng transaction để bảo đảm dữ liệu được xử lý đồng bộ. Nếu xảy ra lỗi giữa chừng, hệ thống phải rollback để tránh sai lệch dữ liệu.
+Luồng nghiệp vụ chính:
 
-## 6. Cấu trúc source
-
-```text
-QuanLyVatTu/
-├── README.md
-├── requirements.txt
-├── .gitignore
-│
-├── src/
-│   ├── main.py
-│   ├── frontend/
-│   │   ├── login_ui.py
-│   │   ├── main_ui.py
-│   │   ├── accounts_ui.py
-│   │   ├── master_data_ui.py
-│   │   ├── inventory_ui.py
-│   │   └── reports_ui.py
-│   │
-│   └── backend/
-│       ├── database_connection.py
-│       ├── auth.py
-│       ├── accounts.py
-│       ├── master_data.py
-│       ├── inventory.py
-│       └── reports.py
-│
-└── database/
-    └── quan_ly_vat_tu.sql
+```
+Nhà cung cấp
+      ↓
+Nhập kho
+      ↓
+Theo dõi tồn kho
+      ↓
+Xuất vật tư cho công trình
+      ↓
+Chuyển kho / Điều chỉnh tồn
+      ↓
+Báo cáo và thống kê
 ```
 
-## 7. Vai trò các thành phần
+---
 
-- `src/main.py`: khởi động chương trình.
-- `src/frontend`: chứa giao diện PyQt6.
-- `src/backend`: xử lý chức năng và kết nối SQL Server.
-- `database/quan_ly_vat_tu.sql`: chứa toàn bộ mã T-SQL của hệ thống.
-- `requirements.txt`: danh sách thư viện Python cần sử dụng.
+# 2. Công nghệ sử dụng
 
-## 8. Trạng thái
+## Backend
 
-Đồ án đang trong giai đoạn phân tích bài toán, thiết kế cơ sở dữ liệu và xây dựng khung source.
+- Python
+- Streamlit
+- pyodbc
+
+## Database
+
+- Microsoft SQL Server
+- T-SQL
+
+## Công cụ phát triển
+
+- Visual Studio Code
+- SQL Server Management Studio
+- Git/GitHub
+
+---
+
+# 3. Kiến trúc hệ thống
+
+Cấu trúc thư mục:
+
+```
+QuanLyVatTu/
+
+│── app.py
+│── database.py
+│── requirements.txt
+│── .env.example
+
+│── assets/
+│   └── style.css
+
+│── database/
+│   ├── quan_ly_vat_tu.sql
+│   ├── Nhap_kho.sql
+│   ├── Xuat_kho.sql
+│   ├── Chuyen_kho.sql
+│   └── trigger.sql
+
+
+│── src/
+
+    ├── auth.py
+    ├── inventory_ops.py
+    ├── master_data.py
+    ├── queries_reports.py
+    ├── concurrency_runner.py
+    └── utils.py
+```
+
+---
+
+# 4. Vai trò các module
+
+## app.py
+
+File khởi động hệ thống Streamlit.
+
+Chịu trách nhiệm:
+
+- Hiển thị giao diện.
+- Điều hướng các chức năng.
+- Kiểm tra quyền người dùng.
+
+---
+
+## database.py
+
+Quản lý kết nối SQL Server.
+
+Chức năng:
+
+- Đọc thông tin kết nối từ file `.env`.
+- Tạo kết nối database.
+- Xử lý lỗi kết nối.
+
+---
+
+## src/auth.py
+
+Xử lý:
+
+- Đăng nhập.
+- Xác thực tài khoản.
+- Kiểm tra quyền truy cập.
+
+---
+
+## src/inventory_ops.py
+
+Xử lý nghiệp vụ kho:
+
+- Nhập kho.
+- Xuất kho.
+- Chuyển kho.
+- Điều chỉnh tồn.
+
+Các nghiệp vụ thay đổi dữ liệu sử dụng transaction để đảm bảo tính toàn vẹn.
+
+---
+
+## src/master_data.py
+
+Quản lý dữ liệu danh mục:
+
+- Vật tư.
+- Kho.
+- Nhà cung cấp.
+- Công trình.
+
+---
+
+## src/queries_reports.py
+
+Xử lý:
+
+- Tra cứu tồn kho.
+- Báo cáo nhập xuất tồn.
+- Thống kê dữ liệu.
+
+---
+
+## src/concurrency_runner.py
+
+Module phục vụ kiểm thử tương tranh.
+
+Mô phỏng các lỗi:
+
+- Lost Update.
+- Dirty Read.
+- Non-repeatable Read.
+- Phantom Read.
+
+---
+
+# 5. Chức năng hệ thống
+
+## Quản trị
+
+- Quản lý tài khoản.
+- Quản lý danh mục.
+- Quản lý dữ liệu hệ thống.
+
+## Nghiệp vụ kho
+
+- Nhập kho vật tư.
+- Xuất kho vật tư.
+- Chuyển vật tư giữa các kho.
+- Điều chỉnh số lượng tồn.
+
+## Báo cáo
+
+- Theo dõi tồn kho.
+- Cảnh báo vật tư dưới mức tối thiểu.
+- Báo cáo nhập - xuất - tồn.
+
+---
+
+# 6. Cài đặt môi trường
+
+## Bước 1: Clone project
+
+```bash
+git clone <repository-url>
+```
+
+Di chuyển vào thư mục:
+
+```bash
+cd QuanLyVatTu
+```
+
+---
+
+## Bước 2: Tạo môi trường Python
+
+Cài đặt thư viện:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+# 7. Cấu hình Database
+
+## Tạo database
+
+Mở SQL Server Management Studio.
+
+Chạy file:
+
+```
+database/quan_ly_vat_tu.sql
+```
+
+Sau đó chạy các file nghiệp vụ:
+
+```
+Nhap_kho.sql
+Xuat_kho.sql
+Chuyen_kho.sql
+trigger.sql
+```
+
+---
+
+# 8. Cấu hình file .env
+
+Tạo file:
+
+```
+.env
+```
+
+từ:
+
+```
+.env.example
+```
+
+Ví dụ:
+
+```env
+DB_SERVER=localhost\SQLEXPRESS
+DB_NAME=QuanLyVatTuXayDung
+DB_DRIVER=ODBC Driver 17 for SQL Server
+DB_TRUSTED_CONNECTION=yes
+```
+
+Lưu ý:
+
+File `.env` không được commit lên GitHub.
+
+---
+
+# 9. Chạy hệ thống
+
+Khởi động ứng dụng:
+
+```bash
+streamlit run app.py
+```
+
+Sau khi chạy thành công, truy cập:
+
+```
+http://localhost:8501
+```
+
+---
+
+# 10. Kiểm thử tương tranh
+
+Chạy module:
+
+```
+src/concurrency_runner.py
+```
+
+Mục đích:
+
+- Mô phỏng các giao tác đồng thời.
+- Quan sát lỗi xảy ra.
+- Đánh giá mức độ ảnh hưởng.
+- Kiểm tra phương pháp xử lý.
+
+---
+
+# 11. Quy trình làm việc nhóm
+
+Trước khi chỉnh sửa:
+
+```bash
+git pull origin main
+```
+
+Sau khi hoàn thành:
+
+```bash
+git add .
+git commit -m "Mô tả thay đổi"
+git push origin main
+```
+
+Không sử dụng:
+
+```bash
+git push --force
+```
+
+trừ khi được người leader xác nhận.
+
+---
+
+# 12. Thành viên phát triển
+
+Danh sách thành viên:
+
+| Thành viên | Phụ trách |
+|---|---|
+| ... | Database |
+| ... | Backend |
+| ... | Giao diện |
+| ... | Kiểm thử |
+| ... | Báo cáo |
