@@ -340,8 +340,8 @@ Danh sách thành viên:
 
 | Thành viên | Phụ trách |
 |---|---|
-| ... | Database |
-| ... | Backend |
-| ... | Giao diện |
-| ... | Kiểm thử |
-| ... | Báo cáo |
+| ... | ...|
+| ... | ...|
+| ... | ...|
+| ... | ...|
+| ... | ...|
